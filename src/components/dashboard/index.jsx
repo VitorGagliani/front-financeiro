@@ -91,7 +91,7 @@ export const Dashboard = () => {
 
         <div className='cards'>
           <div className='card-content'>
-            <img src='./add_circle_orange.svg' alt='Círculo de adição'></img>
+            <img src='./diferenca_circle.svg' alt='Círculo de adição'></img>
             <div className='card-txt'>
        
               <h2>{formatarParaReal(dadosFinanceiros.diferenca)}</h2>

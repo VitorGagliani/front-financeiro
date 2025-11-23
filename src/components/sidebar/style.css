@@ -27,9 +27,22 @@
 
 .sidebar-content li{
   margin: 15px ;
+  padding: 5px;
   cursor: pointer;
   text-align: left;
   font-size: 18px;
+  border-radius: 4px;
+  align-items: center;
+  display: flex;
+}
+
+.sidebar-content li img{
+  margin-right: 10px;
+
+}
+
+.sidebar-content li:hover{
+background-color: #FFCB7F;
 }
 
 
