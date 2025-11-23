@@ -1,0 +1,54 @@
+import './style.css'
+
+export const Dashboard = () => {
+  return (
+    <div className="dashboard">
+      <h1 className='title'>Visão Geral</h1>
+        <div className="infos-cards">
+
+          <div className='cards'>
+            <div className='card-content'>
+            <img src='./arrow_card_orange.svg'></img>
+            <div className='card-txt'>
+            <h2>R$17.400,00</h2>
+            <p className='desc-card'>De entradas</p>
+            </div>
+            </div>
+          </div>
+
+         <div className='cards'>
+            <div className='card-content'>
+            <img src='./arrow_down_orange.svg'></img>
+            <div className='card-txt'>
+            <h2>R$17.400,00</h2>
+            <p className='desc-card'>De saídas</p>
+            </div>
+            </div>
+          </div>
+
+           <div className='cards'>
+            <div className='card-content'>
+            <img src='./add_circle_orange.svg'></img>
+            <div className='card-txt'>
+            <h2>Mercado</h2>
+            <p className='desc-card'>Maior gasto</p>
+            </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div className='graficos'>
+          
+          <div className='grafico-pizza'>
+
+          </div>
+
+          <div className='grafico-barra'>
+            
+          </div>
+          
+        </div>
+    </div>
+  );
+}

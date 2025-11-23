@@ -1,0 +1,35 @@
+.sidebar{
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  color: #1E1E1E;
+  height: 100vh;
+  justify-items: left;
+}
+
+.sidebar-content{
+  padding: 20px 15px; 
+}
+
+.sidebar-content h2{
+  text-align: center;
+  margin-bottom: 60px;
+  font-size: 25px;
+}
+
+
+
+.sidebar-content ul, li{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-content li{
+  margin: 15px ;
+  cursor: pointer;
+  text-align: left;
+  font-size: 18px;
+}
+
+

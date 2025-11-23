@@ -1,0 +1,43 @@
+.dashboard{
+  background-color: #F2F2F4;
+  color: black;
+}
+
+.dashboard .title{
+  text-align: left;
+  padding: 23px 40px;
+  font-size: 25px;
+}
+
+.cards img{
+  max-width: 50px
+}
+
+.card-content{
+  padding: 0 25px;
+  align-items: center;
+  height: 120px;
+  background-color: white;
+  width: 226px;
+  display: flex;
+  gap: 20px;
+}
+
+.card-txt h2, p{
+  padding: 0;
+  margin: 0;
+}
+
+.card-txt p{
+ text-align: right;
+}
+
+.infos-cards{
+  margin-top: 60px;
+  position: relative;
+  display: flex;
+  gap: 30px;
+  place-self: start;
+  padding: 0 40px;
+}
+
