@@ -2,6 +2,33 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './style.css';
 
+//dos graficos
+
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  ArcElement,
+  BarElement,
+  Tooltip,
+  Legend
+} from "chart.js";
+
+import { Bar } from "react-chartjs-2";
+import { Pie } from "react-chartjs-2";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Tooltip,
+  Legend
+);
+
+
+
 const formatarParaReal = (valor) => {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
@@ -15,6 +42,7 @@ export const Dashboard = () => {
     totalEntradas: 0,
     totalSaidas: 0,
     diferenca: 0,
+    totaisPorMes: [],
     maiorGastoCategoria: 'Carregando...',
   });
 
@@ -27,17 +55,21 @@ export const Dashboard = () => {
       try {
        
         const response = await axios.get('http://localhost:8080/gastos/resumo');
-        console.log("Dados da API:", response.data);
+        console.log("totaisPorMes recebido:", response.data.totaisPorMes);
+
      
-        const { totalEntradas, totalSaidas, maiorGastoCategoria } = response.data;
+        const { totalEntradas, totalSaidas, maiorGastoCategoria, totaisPorMes } = response.data;
         console.log("Entradas:", totalEntradas, "Saídas:", totalSaidas);
 
         setDadosFinanceiros({
           totalEntradas: totalEntradas || 0,
           totalSaidas: totalSaidas || 0,
+          totaisPorMes: totaisPorMes || [],
           diferenca: (totalEntradas || 0) - (totalSaidas || 0),
           maiorGastoCategoria: maiorGastoCategoria || 'N/A',
         });
+        console.log("API:", response.data);
+
         setIsLoading(false);
       } catch (err) {
         console.error("Erro ao buscar dados da API:", err);
@@ -49,15 +81,56 @@ export const Dashboard = () => {
     buscarDados();
   }, []); 
 
+
+  const data = {
+    labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+    datasets: [
+      {
+        label: "Entradas",
+        data: dadosFinanceiros.totaisPorMes,
+        backgroundColor: "#B5F49C",
+      },
+    ],
+  };
+
+  const dataPizza = {
+  labels: [
+    "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+    "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+  ],
+
+  datasets: [
+    {
+      label: "Gastos por mês",
+      data: dadosFinanceiros.totaisPorMes,
+      backgroundColor: [
+        "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0",
+        "#9966FF", "#FF9F40", "#E7E9ED", "#36A2EB",
+        "#FF6384", "#4BC0C0", "#9966FF", "#FFCE56"
+      ],
+      borderWidth: 1,
+    },
+  ],
+};
+
+
+  ///////
+
+
   
 
   if (isLoading) {
     return <h1 className='title'>Carregando dados...</h1>;
   }
 
-  if (error) {
-    return <h1 className='title' style={{ color: 'red' }}>{error}</h1>;
-  }
+  // if (error) {
+  //   return <h1 className='title' style={{ color: 'red' }}>{error}</h1>;
+  // }
+
+  //
+
+
+  
 
   
 
@@ -114,11 +187,11 @@ export const Dashboard = () => {
       </div>
 
       <div className='graficos'>
-        <div className='grafico-pizza'>
-          {/*  */}
-        </div>
         <div className='grafico-barra'>
-          {/*  */}
+          <Bar data={data} />;
+        </div>
+        <div className='grafico-pizza'>
+          <Pie data={dataPizza} />
         </div>
       </div>
     </div>
