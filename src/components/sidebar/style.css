@@ -1,10 +1,13 @@
 .sidebar{
-  margin: 0;
-  padding: 0;
+  position: fixed;     /* <-- Deixa fixa */
+  top: 0;
+  left: 0;
+  width: 250px;        /* Mesmo tamanho definido no grid */
+  height: 100vh;
   background-color: white;
   color: #1E1E1E;
-  height: 100vh;
-  justify-items: left;
+  margin: 0;
+  padding: 0;
 }
 
 .sidebar-content{
@@ -27,7 +30,7 @@
 
 .sidebar-content li{
   margin: 15px ;
-  padding: 5px;
+  padding: 5pxx;
   cursor: pointer;
   text-align: left;
   font-size: 18px;
@@ -45,4 +48,10 @@
 background-color: #FFCB7F;
 }
 
-
+.links{
+  text-decoration: none;
+  color: #1E1E1E;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+}

@@ -1,0 +1,12 @@
+h3{
+  margin: 0;
+  padding: 0;
+}
+
+.card-date input{
+  margin: 5px 0;
+  border: 0.5px solid #ccc;
+  background: none;
+  font-size: 16px;
+  padding: 5px;
+}

@@ -1,7 +1,9 @@
 .App {
-  text-align: center;
-  display: grid;
-  grid-template-columns: 250px auto;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  display: flex;
+  height: 100%;
 }
 
 
