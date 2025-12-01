@@ -4,6 +4,7 @@ import { Sidebar } from './components/sidebar/indes';
 import { Dashboard } from './components/dashboard';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Entradas } from './components/entradas';
+import { Saidas } from './components/saidas';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/entradas" element={<Entradas />} />
+        <Route path="/saidas" element={<Saidas />} />
       </Routes>
       </BrowserRouter>
     </div>

@@ -36,16 +36,14 @@ const formatarParaReal = (valor) => {
   }).format(valor);
 };
 
-export const Dashboard = () => {
+export const Saidas = () => {
 
   const [dadosFinanceiros, setDadosFinanceiros] = useState({
     totalEntradas: 0,
-    totalSaidas: 0,
-    diferenca: 0,
     totaisPorMes: [],
-    totaisPorMesSaida: [],
     totalPorCategoria: [],
-    maiorGastoCategoria: 'Carregando...',
+    maiorMes: [],
+    maiorEntradaCategoria: 'Carregando...',
   });
   
 
@@ -57,22 +55,26 @@ export const Dashboard = () => {
     const buscarDados = async () => {
       try {
        
-        const response = await axios.get('http://localhost:8080/gastos/resumo');
+        const response = await axios.get('http://localhost:8080/gastos/saidas');
         console.log("totaisPorMes recebido:", response.data.totaisPorMes);
 
      
-        const { totalEntradas, totalSaidas, maiorGastoCategoria, totaisPorMes, totaisPorMesSaida, totalPorCategoria } = response.data;
-        console.log("totalcateg:", totalPorCategoria);
+const { totalEntradas, totaisPorMes, maiorMes, totalPorCategoria } = response.data;
 
-        setDadosFinanceiros({
-          totalEntradas: totalEntradas || 0,
-          totalSaidas: totalSaidas || 0,
-          totaisPorMes: totaisPorMes || [],
-          totaisPorMesSaida: totaisPorMesSaida || [],
-          totalPorCategoria: totalPorCategoria || [],
-          diferenca: (totalEntradas || 0) - (totalSaidas || 0),
-          maiorGastoCategoria: maiorGastoCategoria || 'N/A',
-        });
+let maiorMesDisplay = "—";
+
+if (maiorMes && typeof maiorMes === "object") {
+  const entries = Object.entries(maiorMes);
+  const [mes, valor] = entries.reduce((a, b) => (a[1] > b[1] ? a : b));
+  maiorMesDisplay = `${mes}` ;
+}
+
+setDadosFinanceiros({
+  totalEntradas: totalEntradas || 0,
+  totaisPorMes: totaisPorMes || [],
+  totalPorCategoria: totalPorCategoria || [],
+  maiorMesDisplay,
+});
         console.log("API:", response.data);
 
         setIsLoading(false);
@@ -91,38 +93,27 @@ export const Dashboard = () => {
     labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
     datasets: [
       {
-        label: "Entradas",
+        label: "Saídas",
         data: dadosFinanceiros.totaisPorMes,
         backgroundColor: "#B5F49C",
       },
     ],
   };
 
-   const dataSaidas = {
-    labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
-    datasets: [
-      {
-        label: "Saídas",
-        data: dadosFinanceiros.totaisPorMesSaida,
-        backgroundColor: "#FF6767",
-      },
-    ],
-  };
 
   const dataPizza = {
   labels: [
-    "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
-    "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+    "Saidas por mês"
   ],
 
   datasets: [
     {
-      label: "Entradas por mês",
+      label: "Saídas por mês",
       data: dadosFinanceiros.totaisPorMes,
       backgroundColor: [
-       "#a32e47ff", "#36A2EB", "#FFCE56", "#4BC0C0",
-        "#9966FF", "#b99b7cff", "#E7E9ED", "#98c9eaff",
-        "#ffc6d2ff", "#4bc095ff", "#ff4aabff", "#FFCE56"
+        "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0",
+        "#9966FF", "#FF9F40", "#E7E9ED", "#36A2EB",
+        "#FF6384", "#4BC0C0", "#9966FF", "#FFCE56"
       ],
       borderWidth: 1,
     },
@@ -181,17 +172,6 @@ const categoriaPizza = {
             <div className='card-txt'>
    
               <h2>{formatarParaReal(dadosFinanceiros.totalEntradas)}</h2>
-              <p className='desc-card'>De entradas</p>
-            </div>
-          </div>
-        </div>
-
-        <div className='cards'>
-          <div className='card-content'>
-            <img src='./arrow_down_orange.svg' alt='Seta para baixo'></img>
-            <div className='card-txt'>
-      
-              <h2>{formatarParaReal(dadosFinanceiros.totalSaidas)}</h2>
               <p className='desc-card'>De saídas</p>
             </div>
           </div>
@@ -199,11 +179,22 @@ const categoriaPizza = {
 
         <div className='cards'>
           <div className='card-content'>
-            <img src='./diferenca_circle.svg' alt='Círculo de adição'></img>
+            <img src='./calendar_orange.svg' alt='Calendário'></img>
+            <div className='card-txt card-date'>
+              <input type='date'></input> <h3> até</h3>
+              <input type='date'></input>
+             
+            </div>
+          </div>
+        </div>
+
+        <div className='cards'>
+          <div className='card-content'>
+            <img src='./add_circle_orange.svg' alt='Círculo de adição'></img>
             <div className='card-txt'>
        
-              <h2>{formatarParaReal(dadosFinanceiros.diferenca)}</h2>
-              <p className='desc-card'>Diferença</p>
+              <h2>{dadosFinanceiros.maiorMesDisplay}</h2>
+              <p className='desc-card'>Mais saídas</p>
             </div>
           </div>
         </div>
@@ -214,7 +205,7 @@ const categoriaPizza = {
             <div className='card-txt'>
        
               <h2>{dadosFinanceiros.maiorGastoCategoria}</h2>
-              <p className='desc-card'>Maior gasto</p>
+              <p className='desc-card'>Adicionar gasto</p>
             </div>
           </div>
         </div>
@@ -228,12 +219,8 @@ const categoriaPizza = {
         <div className='grafico-pizza'>
           <Pie data={dataPizza} />
         </div>
-        <div className='grafico-saida-barra'>
-          <Bar data={dataSaidas} />
-        </div>
-        <div className='grafico-gasto-categoria'>
-          <Bar data={categoriaPizza} />
-        </div>
+      
+        
       </div>
     </div>
   );

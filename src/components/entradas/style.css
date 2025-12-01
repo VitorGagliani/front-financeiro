@@ -10,3 +10,34 @@ h3{
   font-size: 16px;
   padding: 5px;
 }
+
+.grid{
+  padding: 20px 50px;
+  margin-top: 50px;
+  width: 1070px;
+  place-self: center;
+  display: grid;
+  background-color: white;
+  gap: 10px;
+}
+
+table th, table td{
+  padding: 5px 0;
+  
+  border-bottom: 1px solid black;
+}
+
+.tabela-titulo{
+}
+
+.td-valor{
+  text-align: left;
+}
+
+.th-valor{
+  text-align: left;
+}
+
+.td-categoria, .td-desc, .td-data, .td-forma{
+  text-align: center;
+}
