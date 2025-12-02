@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './style.css';
+import { ModalAdicionarSaida } from "../modalAdicionarSaida";
+
+
 
 //dos graficos
 
@@ -36,57 +38,60 @@ const formatarParaReal = (valor) => {
   }).format(valor);
 };
 
+
+
+
 export const Saidas = () => {
 
+  const [modalOpen, setModalOpen] = useState(false);
+
   const [dadosFinanceiros, setDadosFinanceiros] = useState({
-    totalEntradas: 0,
+    totalSaidas: 0,
     totaisPorMes: [],
     totalPorCategoria: [],
     maiorMes: [],
-    maiorEntradaCategoria: 'Carregando...',
+    maiorSaidaCategoria: 'Carregando...',
+    todasSaidas: [],
   });
   
 
 
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [ setError] = useState(null);
 
-  useEffect(() => {
-    const buscarDados = async () => {
-      try {
-       
-        const response = await axios.get('http://localhost:8080/gastos/saidas');
-        console.log("totaisPorMes recebido:", response.data.totaisPorMes);
+  const carregarDados = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/gastos/saidas');
 
-     
-const { totalEntradas, totaisPorMes, maiorMes, totalPorCategoria } = response.data;
+    const { totalSaidas, totaisPorMes, maiorMes, totalPorCategoria, todasSaidas } = response.data;
 
-let maiorMesDisplay = "—";
+    let maiorMesDisplay = "—";
+    if (maiorMes && typeof maiorMes === "object") {
+      const entries = Object.entries(maiorMes);
+      const [mes] = entries.reduce((a, b) => (a[1] > b[1] ? a : b));
+      maiorMesDisplay = mes;
+    }
 
-if (maiorMes && typeof maiorMes === "object") {
-  const entries = Object.entries(maiorMes);
-  const [mes, valor] = entries.reduce((a, b) => (a[1] > b[1] ? a : b));
-  maiorMesDisplay = `${mes}` ;
-}
+    setDadosFinanceiros({
+      totalSaidas: totalSaidas || 0,
+      totaisPorMes: totaisPorMes || [],
+      totalPorCategoria: totalPorCategoria || [],
+      maiorMesDisplay,
+      todasSaidas: todasSaidas || [],
+    });
 
-setDadosFinanceiros({
-  totalEntradas: totalEntradas || 0,
-  totaisPorMes: totaisPorMes || [],
-  totalPorCategoria: totalPorCategoria || [],
-  maiorMesDisplay,
-});
-        console.log("API:", response.data);
+    setIsLoading(false);
+  } catch (err) {
+    console.error("Erro ao buscar dados:", err);
+    setError("Não foi possível carregar os dados.");
+    setIsLoading(false);
+  }
+};
 
-        setIsLoading(false);
-      } catch (err) {
-        console.error("Erro ao buscar dados da API:", err);
-        setError("Não foi possível carregar os dados.");
-        setIsLoading(false);
-      }
-    };
+useEffect(() => {
+  carregarDados();
+}, []);
 
-    buscarDados();
-  }, []); 
 
 
   const data = {
@@ -103,7 +108,8 @@ setDadosFinanceiros({
 
   const dataPizza = {
   labels: [
-    "Saidas por mês"
+     "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+    "Jul", "Ago", "Set", "Out", "Nov", "Dez"
   ],
 
   datasets: [
@@ -111,28 +117,9 @@ setDadosFinanceiros({
       label: "Saídas por mês",
       data: dadosFinanceiros.totaisPorMes,
       backgroundColor: [
-        "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0",
-        "#9966FF", "#FF9F40", "#E7E9ED", "#36A2EB",
-        "#FF6384", "#4BC0C0", "#9966FF", "#FFCE56"
-      ],
-      borderWidth: 1,
-    },
-  ],
-};
-
-const categoriaPizza = {
-  labels: [
-    
-  ],
-
-  datasets: [
-    {
-      label: "Gastos por categoria",
-      data: dadosFinanceiros.totalPorCategoria,
-      backgroundColor: [
-        "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0",
-        "#9966FF", "#FF9F40", "#E7E9ED", "#36A2EB",
-        "#FF6384", "#4BC0C0", "#9966FF", "#FFCE56"
+        "#a32e47ff", "#36A2EB", "#FFCE56", "#4BC0C0",
+        "#9966FF", "#b99b7cff", "#E7E9ED", "#98c9eaff",
+        "#ffc6d2ff", "#4bc095ff", "#ff4aabff", "#FFCE56"
       ],
       borderWidth: 1,
     },
@@ -140,7 +127,33 @@ const categoriaPizza = {
 };
 
 
-  ///////
+
+//fazer o post
+
+const salvarEntrada = async (form) => {
+
+    const payload = {
+        descricao: form.descricao,
+        valor: Number(form.valor),
+        data: form.data,
+        tipo: "SAIDA",
+        forma: form.forma.toUpperCase(),
+        categoriaId: Number(form.categoriaId)
+
+    };  
+    //vendo se deu certo no console
+    console.log("Payload enviado:", payload);
+
+  try {
+    await axios.post("http://localhost:8080/gastos", payload);
+    alert("Entrada salva com sucesso!");
+    carregarDados();
+  } catch (error) {
+    console.error("Erro ao salvar entrada:", error);
+    alert("Erro ao salvar entrada");
+  }
+};
+
 
 
   
@@ -171,22 +184,13 @@ const categoriaPizza = {
             <img src='./arrow_card_orange.svg' alt='Seta para cima'></img>
             <div className='card-txt'>
    
-              <h2>{formatarParaReal(dadosFinanceiros.totalEntradas)}</h2>
+              <h2>{formatarParaReal(dadosFinanceiros.totalSaidas)}</h2>
               <p className='desc-card'>De saídas</p>
             </div>
           </div>
         </div>
 
-        <div className='cards'>
-          <div className='card-content'>
-            <img src='./calendar_orange.svg' alt='Calendário'></img>
-            <div className='card-txt card-date'>
-              <input type='date'></input> <h3> até</h3>
-              <input type='date'></input>
-             
-            </div>
-          </div>
-        </div>
+     
 
         <div className='cards'>
           <div className='card-content'>
@@ -200,13 +204,12 @@ const categoriaPizza = {
         </div>
 
          <div className='cards'>
-          <div className='card-content'>
+          <div className='card-content' onClick={() => setModalOpen(true)}>
             <img src='./add_circle_orange.svg' alt='Círculo de adição'></img>
             <div className='card-txt'>
-       
-              <h2>{dadosFinanceiros.maiorGastoCategoria}</h2>
-              <p className='desc-card'>Adicionar gasto</p>
+              <p className='desc-card'>Adicionar saída</p>
             </div>
+            
           </div>
         </div>
 
@@ -214,7 +217,7 @@ const categoriaPizza = {
 
       <div className='graficos'>
         <div className='grafico-barra'>
-          <Bar data={data} />;
+          <Bar data={data} />
         </div>
         <div className='grafico-pizza'>
           <Pie data={dataPizza} />
@@ -222,6 +225,50 @@ const categoriaPizza = {
       
         
       </div>
+
+
+{/* //tabela de entradas */}
+
+      <div className="grid">
+       
+        <table className="tabela">
+          
+            <thead className=''>
+                <tr>
+                    <th className='th-valor'>Valor</th>
+                    <th className='th-categoria'>Categoria</th>
+                    <th className='th-desc'>Descrição</th>
+                    <th className='th-data'>Data</th>
+                    <th className='th-forma'>Forma</th> 
+                </tr>
+            </thead>
+            <tbody>
+               
+                {dadosFinanceiros.todasSaidas.map((transacao) => (
+                    <tr key={transacao.id}>
+
+                      {/* aqui to percorrendo o array de entradas e mostrando na tabela */}
+                        <td className="td-valor">{formatarParaReal(transacao.valor)}</td> 
+                  
+                        <td className='td-categoria'>{transacao.categoria?.descricao || 'Sem Categoria'}</td>
+                        
+                        <td className='td-desc'>{transacao.descricao}</td>
+                        <td className='td-data'>{transacao.data}</td> 
+                        <td className='td-forma'>{transacao.forma}</td> 
+                    </tr>
+                ))}
+               
+            </tbody>
+        </table>
+
+        
+      </div>
+
+        <ModalAdicionarSaida
+  isOpen={modalOpen}
+  onClose={() => setModalOpen(false)}
+  onSalvar={salvarEntrada}
+/>
     </div>
   );
 }

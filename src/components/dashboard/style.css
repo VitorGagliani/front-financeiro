@@ -2,9 +2,8 @@
   background-color: #F2F2F4;
   color: black;
   max-width: 100%;
-  margin-left: 260px;
+  margin-left: 250px;
   top: 0;
-  
 }
 
 
@@ -23,7 +22,7 @@
   align-items: center;
   height: 120px;
   background-color: white;
-  width: 226px;
+  min-width: 226px;
   display: flex;
   gap: 20px;
 }

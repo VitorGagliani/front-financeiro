@@ -28,10 +28,6 @@ export const Sidebar = () => {
           <p>Saídas</p>
           </Link>
         </li>
-        <li>
-          <img src="./add_circle_sidebar.svg" alt="" />
-          <p>Cadastros</p>
-        </li>
       </ul>
        </div>
     </nav>

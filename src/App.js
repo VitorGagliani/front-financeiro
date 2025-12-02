@@ -5,7 +5,7 @@ import { Dashboard } from './components/dashboard';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Entradas } from './components/entradas';
 import { Saidas } from './components/saidas';
-
+ 
 function App() {
   return (
     <div className="App">

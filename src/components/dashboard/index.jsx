@@ -223,7 +223,7 @@ const categoriaPizza = {
 
       <div className='graficos'>
         <div className='grafico-barra'>
-          <Bar data={data} />;
+          <Bar data={data} />
         </div>
         <div className='grafico-pizza'>
           <Pie data={dataPizza} />

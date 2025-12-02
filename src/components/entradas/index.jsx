@@ -58,7 +58,7 @@ export const Entradas = () => {
 
 
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [setError] = useState(null);
 
   const carregarDados = async () => {
   try {
@@ -127,37 +127,22 @@ useEffect(() => {
   ],
 };
 
-const categoriaPizza = {
-  labels: [
-    
-  ],
-
-  datasets: [
-    {
-      label: "Gastos por categoria",
-      data: dadosFinanceiros.totalPorCategoria,
-      backgroundColor: [
-        "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0",
-        "#9966FF", "#FF9F40", "#E7E9ED", "#36A2EB",
-        "#FF6384", "#4BC0C0", "#9966FF", "#FFCE56"
-      ],
-      borderWidth: 1,
-    },
-  ],
-};
-
 
 //fazer o post
 
 const salvarEntrada = async (form) => {
-  const payload = {
-    descricao: form.descricao,
-    valor: Number(form.valor),
-    data: form.data,
-    tipo: "ENTRADA",
-    forma: form.forma.toUpperCase(), 
-    categoria: { id: Number(form.categoriaId) }
-  };
+
+    const payload = {
+        descricao: form.descricao,
+        valor: Number(form.valor),
+        data: form.data,
+        tipo: "ENTRADA",
+        forma: form.forma.toUpperCase(),
+        categoriaId: Number(form.categoriaId)
+
+    };  
+
+    console.log("Payload enviado:", payload);
 
   try {
     await axios.post("http://localhost:8080/gastos", payload);
@@ -276,14 +261,14 @@ const salvarEntrada = async (form) => {
             </tbody>
         </table>
 
+        
+      </div>
+
         <ModalAdicionarEntrada
   isOpen={modalOpen}
   onClose={() => setModalOpen(false)}
   onSalvar={salvarEntrada}
 />
-        
-      </div>
-
     </div>
   );
 }
